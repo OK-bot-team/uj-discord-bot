@@ -1,9 +1,27 @@
 from PIL import Image, ImageDraw, ImageFont
 
+def center_text(img, font, text, color=(255, 255, 255)):
+    W = 700
+    H = 200
+    draw = ImageDraw.Draw(img)
+    text_width, text_height = draw.textsize(text, font)
+    position = ((W-text_width)/2,(H-text_height)/2)
+    draw.text(position, text, color, font=font)
+    return img
+
+
 def create_image(text):
-    img = Image.new('RGB', (500, 500), color = (73, 109, 137))
+    W = 700
+    H = 200
 
-    d = ImageDraw.Draw(img)
-    d.text((200,10), str(text), fill=(255, 255, 0))
+    text = "Ok " + str(text)
 
+    img = Image.new('RGB', (W, H))
+    ok_emoji = Image.open("images/ok.png")
+
+    font = ImageFont.truetype("arial", 60)
+    center_text(img, font, str(text))
+
+    img.paste(ok_emoji, (10, 75))
     img.save('images/response.png')
+
