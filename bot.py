@@ -24,6 +24,7 @@ def main():
                 create_image(arg).save(image_binary, 'PNG')
                 image_binary.seek(0)
                 await ctx.channel.send(file=discord.File(fp=image_binary, filename='image.png'))
+                await ctx.delete()
 
     client.run(os.getenv("DISCORD_TOKEN"))
 
