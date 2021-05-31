@@ -23,5 +23,5 @@ def create_image(text):
     center_text(img, font, str(text))
 
     img.paste(ok_emoji, (10, 75))
-    img.save('images/response.png')
+    return img
 
