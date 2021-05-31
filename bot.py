@@ -18,6 +18,7 @@ def main():
         if(ctx.content.startswith(":ok") and ctx.content[-1] == ":"):
             arg = ctx.content[3:-1]
             create_image(arg)
+            print(arg)
             p = discord.File("images/response.png")
             await ctx.channel.send(file=p)
             os.remove("images/response.png")
