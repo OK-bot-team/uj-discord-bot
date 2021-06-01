@@ -1,7 +1,7 @@
 from PIL import Image, ImageDraw, ImageFont
 
 def center_text(img, font, text, color=(255, 255, 255)):
-    W = 700
+    W = 1000
     H = 200
     draw = ImageDraw.Draw(img)
     text_width, text_height = draw.textsize(text, font)
@@ -11,7 +11,7 @@ def center_text(img, font, text, color=(255, 255, 255)):
 
 
 def create_image(text):
-    W = 700
+    W = 1000
     H = 200
 
     text = "Ok " + str(text)
@@ -19,7 +19,15 @@ def create_image(text):
     img = Image.new('RGB', (W, H))
     ok_emoji = Image.open("images/ok.png")
 
-    font = ImageFont.truetype("fonts/font.otf", 60)
+    fontsize = 1
+    img_fraction = 0.8
+
+    font = ImageFont.truetype("fonts/font.otf", fontsize)
+    while font.getsize(text)[0] < img_fraction*img.size[0]:
+        # iterate until the text size is just larger than the criteria
+        fontsize += 1
+        font = ImageFont.truetype("fonts/font.otf", fontsize)
+
     center_text(img, font, str(text))
 
     img.paste(ok_emoji, (10, 75))
