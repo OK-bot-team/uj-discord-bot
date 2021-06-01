@@ -19,7 +19,7 @@ def create_image(text):
     img = Image.new('RGB', (W, H))
     ok_emoji = Image.open("images/ok.png")
 
-    font = ImageFont.truetype("fonts/font.ttf", 60)
+    font = ImageFont.truetype("fonts/font.otf", 60)
     center_text(img, font, str(text))
 
     img.paste(ok_emoji, (10, 75))
