@@ -6,7 +6,7 @@ from image_generator import create_image
 from PIL import Image
 from io import BytesIO
 from random import randint
-
+import re
 
 async def response(text, context):
     print(text)
@@ -27,9 +27,10 @@ def main():
 
     @client.event
     async def on_message(ctx):
-        if(ctx.content.startswith(":ok") and ctx.content[-1] == ":"):
-            arg = ctx.content[3:-1]
-            await response(arg, ctx)
+        text = re.search(r"(?<=\:[oO][kK])(.*?)(?=\:)", ctx.content)
+
+        if(text):
+            await response(text.group(0), ctx)
             await ctx.delete()
         elif (randint(1, 2000) >= 1999 and ctx.author != client.user):
             nickname = str(ctx.author)[0:-5]
