@@ -28,9 +28,9 @@ def create_image(text):
         fontsize += 1
         font = ImageFont.truetype("fonts/font.otf", fontsize)
 
-    fontsize = max(72, fontsize)
+    fontsize = min(60, fontsize)
     font = ImageFont.truetype("fonts/font.otf", fontsize)
-    
+
     center_text(img, font, str(text))
 
     img.paste(ok_emoji, (10, 75))
