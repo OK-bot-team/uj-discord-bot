@@ -15,6 +15,7 @@ def create_image(text):
     H = 200
 
     text = "Ok " + str(text)
+    text = ' '.join(text.split())
 
     img = Image.new('RGB', (W, H))
     ok_emoji = Image.open("images/ok.png")
