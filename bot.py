@@ -8,10 +8,10 @@ from io import BytesIO
 from random import randint
 import re
 
-async def response(text, context):
-    print(text)
+async def response(text, context, author):
+    print("Message text: " + text)
     with BytesIO() as image_binary:
-        create_image(text).save(image_binary, 'PNG')
+        create_image(text, author).save(image_binary, 'PNG')
         image_binary.seek(0)
         await context.channel.send(file=discord.File(fp=image_binary, filename='image.png'))
 
@@ -30,14 +30,13 @@ def main():
         text = re.search(r"(?<=\:[oO][kK])([\s\S]*)(?=\:)", ctx.content)
 
         if(text):
-            await response(text.group(0), ctx)
+            await response(text.group(0), ctx, ctx.author)
             await ctx.delete()
         elif (randint(1, 2000) >= 1999 and ctx.author != client.user):
             nickname = str(ctx.author)[0:-5]
-            await response(nickname, ctx)
+            await response(nickname, ctx, ctx.author)
 
     client.run(os.getenv("DISCORD_TOKEN"))
-
 
 if __name__ == "__main__":
     main()
