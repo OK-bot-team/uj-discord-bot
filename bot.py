@@ -27,7 +27,7 @@ def main():
 
     @client.event
     async def on_message(ctx):
-        text = re.search(r"(?<=\:[oO][kK])([\s\S]*?)(?=\:)", ctx.content)
+        text = re.search(r"(?<=\:[oO][kK]).*(?=\:)", ctx.content)
 
         if(text):
             await response(text.group(0), ctx)
