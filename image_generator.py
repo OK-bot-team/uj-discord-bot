@@ -25,26 +25,20 @@ def create_image(text, author):
         img = Image.open(BytesIO(background))
         img = img.resize((W ,H))
 
-    ok_emoji = Image.open("images/ok.png")
-    fontsize = 1
+    fontsize = 10
     img_fraction = 0.8
 
     font = ImageFont.truetype("fonts/font.otf", fontsize)
     draw = ImageDraw.Draw(img)
     text_width, text_height = draw.textsize(text, font)
 
-    while text_width < W * img_fraction and text_height < H * img_fraction:
-        #print(font.getsize(text)[0], W *0.8, font.getsize(text)[1], H * 0.8)
-        # iterate until the text size is just larger than the criteria
-        fontsize += 1
-        text_width, text_height = draw.textsize(text, font)
-        font = ImageFont.truetype("fonts/font.otf", fontsize)
+    fontsize = int(min(W / text_width, H / text_height) * 10 * img_fraction)
 
-    #print(fontsize)
     font = ImageFont.truetype("fonts/font.otf", fontsize)
 
     center_text(img, font, str(text), W, H)
 
+    ok_emoji = Image.open("images/ok.png")
     img.paste(ok_emoji, (10, 75))
     return img
 
