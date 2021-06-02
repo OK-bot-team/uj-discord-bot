@@ -14,7 +14,7 @@ async def response(text, context):
         create_image(text).save(image_binary, 'PNG')
         image_binary.seek(0)
         await context.channel.send(file=discord.File(fp=image_binary, filename='image.png'))
-        
+
 
 def main():
     client = commands.Bot(command_prefix="?")
@@ -27,7 +27,7 @@ def main():
 
     @client.event
     async def on_message(ctx):
-        text = re.search(r"(?<=\:[oO][kK])([\s\S]*?)(?=\:)", ctx.content)
+        text = re.search(r"(?<=\:[oO][kK])([\s\S]*)(?=\:)", ctx.content)
 
         if(text):
             await response(text.group(0), ctx)
