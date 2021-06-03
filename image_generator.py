@@ -1,10 +1,14 @@
 from PIL import Image, ImageDraw, ImageFont
 from io import BytesIO
 import requests
+from dotenv import load_dotenv
+import os
 import re
 
 # API url with slash!
-API_URL = "http://skyman503.pythonanywhere.com/"
+load_dotenv()
+API_URL = os.getenv("API_URL")
+
 
 
 def get_text_dimensions(text, font):
