@@ -1,6 +1,7 @@
 from PIL import Image, ImageDraw, ImageFont
 from io import BytesIO
 import requests
+import re
 
 # API url with slash!
 API_URL = "http://skyman503.pythonanywhere.com/"
@@ -16,8 +17,18 @@ def create_image(text, author):
     fontsize = 90
     if (len(text) > 100):
         fontsize = 45
+
+    print(re.search(r'[żółćęśąźń]', text))
+    if re.search(r'[żółćęśąźń]', text) != None:
+        font_path = "fonts/font.otf"
+    else:
+        font_path = "fonts/Symbola.ttf"
+
     color = (255, 255, 255)
-    font = ImageFont.truetype("fonts/font.otf", fontsize)
+    font = ImageFont.truetype(
+        font_path,
+        fontsize,
+        encoding='unic')  # TODO: better font
     text = "Ok " + str(text)
 
     text_width, text_height = get_text_dimensions(text, font)
