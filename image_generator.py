@@ -30,6 +30,11 @@ def create_image(text, author):
     else:
         black_background = False
 
+    if text[0] == '~':
+        text = text[1:]
+    else:
+        text = "Ok " + str(text)
+
     if re.search(r'[żółćęśąźń]', text) == None:
         emoji = True
         font_path = emoji_font
