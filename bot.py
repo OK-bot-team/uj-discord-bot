@@ -8,8 +8,9 @@ from io import BytesIO
 from random import randint
 import re
 
+
 async def response(text, context, author):
-    print("Message text: " + text)
+    print("Message text: " + text[:50])
     with BytesIO() as image_binary:
         create_image(text, author).save(image_binary, 'PNG')
         image_binary.seek(0)
@@ -37,6 +38,7 @@ def main():
             await response(nickname, ctx, ctx.author)
 
     client.run(os.getenv("DISCORD_TOKEN"))
+
 
 if __name__ == "__main__":
     main()
