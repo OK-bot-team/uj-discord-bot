@@ -24,10 +24,11 @@ def create_image(text, author):
     if (len(text) > 100):
         fontsize = 40
 
-    if text[0] == '~':
-        text = text[1:]
+    if text[:5] == 'black':
+        text = text[5:]
+        black_background = True
     else:
-        text = "Ok " + str(text)
+        black_background = False
 
     if re.search(r'[żółćęśąźń]', text) == None:
         emoji = True
@@ -53,7 +54,10 @@ def create_image(text, author):
     print("Image size: ", W, H,)
     position = ((W - text_width) / 2, (H - text_height) / 2)
 
-    background = get_background(author.id)
+    background = None
+    if(not black_background):
+        background = get_background(author.id)
+
     if (background is None):
         img = Image.new('RGB', (W, H))
     else:
