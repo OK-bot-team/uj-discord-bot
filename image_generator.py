@@ -24,9 +24,17 @@ def create_image(text, author):
     if (len(text) > 100):
         fontsize = 40
 
-    if re.search(r'[żółćęśąźń]', text) == None:
-        font_path = emoji_font
+    if text[0] == '~':
+        text = text[1:]
     else:
+        text = "Ok " + str(text)
+
+    if re.search(r'[żółćęśąźń]', text) == None:
+        emoji = True
+        font_path = emoji_font
+        text = "👌 " + str(text)
+    else:
+        emoji = False
         font_path = polish_font
 
     color = (255, 255, 255)
@@ -35,13 +43,8 @@ def create_image(text, author):
         fontsize,
         encoding='unic')  # TODO: better font
 
-    if text[0] == '~':
-        text = text[1:]
-    else:
-        text = "Ok " + str(text)
-
     text_width, text_height = get_text_dimensions(text, font)
-    W = int(text_width * 1.1) + 90
+    W = int(text_width * 1.1) + 150
     H = int(text_height * 1.1) + 30
     if (H * 10 < W):
         H = int(W / 10)
@@ -60,7 +63,8 @@ def create_image(text, author):
     draw = ImageDraw.Draw(img)
     draw.text(position, text, color, font=font)
 
-    img.paste(ok_emoji, (10, min(int(text_height / 2 - 15), 150)))
+    if not emoji:
+        img.paste(ok_emoji, (10, min(int(text_height / 2 - 15), 150)))
     return img
 
 
