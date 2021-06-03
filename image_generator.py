@@ -9,6 +9,8 @@ import re
 load_dotenv()
 API_URL = os.getenv("API_URL")
 
+polish_font = "fonts/font.otf"
+emoji_font = "fonts/Symbola.ttf"
 ok_emoji = Image.open("images/ok.png")
 img_text_measure = Image.new('RGB', (1, 1))
 draw_text_measure = ImageDraw.Draw(img_text_measure)
@@ -22,24 +24,28 @@ def create_image(text, author):
     if (len(text) > 100):
         fontsize = 40
 
-    if re.search(r'[żółćęśąźń]', text) != None:
-        font_path = "fonts/font.otf"
+    if re.search(r'[żółćęśąźń]', text) == None:
+        font_path = emoji_font
     else:
-        font_path = "fonts/Symbola.ttf"
+        font_path = polish_font
 
     color = (255, 255, 255)
     font = ImageFont.truetype(
         font_path,
         fontsize,
         encoding='unic')  # TODO: better font
-    text = "Ok " + str(text)
+
+    if text[0] == '~':
+        text = text[1:]
+    else:
+        text = "Ok " + str(text)
 
     text_width, text_height = get_text_dimensions(text, font)
     W = int(text_width * 1.1) + 90
     H = int(text_height * 1.1) + 30
     if (H * 10 < W):
         H = int(W / 10)
-        
+
     print(text_width, text_height)
     print("Image size: ", W, H,)
     position = ((W - text_width) / 2, (H - text_height) / 2)
@@ -54,7 +60,7 @@ def create_image(text, author):
     draw = ImageDraw.Draw(img)
     draw.text(position, text, color, font=font)
 
-    img.paste(ok_emoji, (10, min(int(text_height / 2), 75)))
+    img.paste(ok_emoji, (10, min(int(text_height / 2 - 15), 150)))
     return img
 
 
