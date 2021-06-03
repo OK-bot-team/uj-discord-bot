@@ -15,9 +15,15 @@ def center_text(img, font, text, W, H, color=(255, 255, 255)):
 
 
 def create_image(text, author):
-    W = 1000
-    H = 200 * int((1 + text.count('\n') / 3))
+    fontsize = 90
     text = "Ok " + str(text)
+
+    font = ImageFont.truetype("fonts/font.otf", fontsize)
+    img = Image.new('RGB', (100, 100))
+    draw = ImageDraw.Draw(img)
+    text_width, text_height = draw.textsize(text, font)
+    W = max(1000, int(text_width * 1.1) + 30)
+    H = max(200, int(text_height * 1.1) + 30)
 
     background = get_background(author.id)
     if (background is None):
@@ -26,14 +32,6 @@ def create_image(text, author):
         img = Image.open(BytesIO(background))
         img = img.resize((W, H))
 
-    fontsize = 10
-    img_fraction = 0.8
-
-    font = ImageFont.truetype("fonts/font.otf", fontsize)
-    draw = ImageDraw.Draw(img)
-    text_width, text_height = draw.textsize(text, font)
-
-    fontsize = int(min(W / text_width, H / text_height) * 10 * img_fraction)
     font = ImageFont.truetype("fonts/font.otf", fontsize)
     center_text(img, font, str(text), W, H)
 
