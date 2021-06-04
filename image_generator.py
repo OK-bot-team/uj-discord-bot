@@ -30,7 +30,7 @@ def create_image(text, author):
     else:
         black_background = False
 
-    if text[0] == '~':
+    if text[:1] == '~':
         text = text[1:]
     else:
         text = "Ok " + str(text)
