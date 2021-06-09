@@ -11,9 +11,9 @@ API_URL = os.getenv("API_URL")
 
 polish_font = "fonts/font.otf"
 emoji_font = "fonts/Symbola.ttf"
-ok_emoji = Image.open("images/ok.png")
 img_text_measure = Image.new('RGB', (1, 1))
 draw_text_measure = ImageDraw.Draw(img_text_measure)
+
 
 def get_text_dimensions(text, font):
     return draw_text_measure.textsize(text, font)
@@ -73,7 +73,12 @@ def create_image(text, author):
     draw.text(position, text, color, font=font)
 
     if not emoji:
-        img.paste(ok_emoji, (10, min(int(text_height / 2 - 15), 150)))
+        ok_font = font = ImageFont.truetype(
+            emoji_font,
+            80,
+            encoding='unic')
+        draw.text((10, min(int(text_height / 2 - 15), 150)),
+                  "👌", color, font=ok_font)
     return img
 
 
