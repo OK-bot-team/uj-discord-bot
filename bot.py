@@ -16,6 +16,12 @@ async def response(text, context, author):
         image_binary.seek(0)
         await context.channel.send(file=discord.File(fp=image_binary, filename='image.png'))
 
+def get_text(message):
+    regx = re.search(r"(?<=;[oO][kK])([\s\S]*)(?=;)", message);
+    if regx == None:
+        return None
+    else:
+        return regx.group(0)
 
 def main():
     client = commands.Bot(command_prefix="?")
@@ -28,10 +34,10 @@ def main():
 
     @client.event
     async def on_message(ctx):
-        text = re.search(r"(?<=;[oO][kK])([\s\S]*)(?=;)", ctx.content)
+        text = get_text(ctx.content)
 
         if(text):
-            await response(text.group(0), ctx, ctx.author)
+            await response(text, ctx, ctx.author)
             await ctx.delete()
         elif (randint(1, 2000) >= 1999 and ctx.author != client.user):
             nickname = str(ctx.author)[0:-5]
