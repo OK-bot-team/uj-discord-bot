@@ -19,7 +19,7 @@ def get_text_dimensions(text, font):
     return draw_text_measure.textsize(text, font)
 
 
-def create_image(text, author):
+def create_image(text, author, raw):
     fontsize = 80
     if (len(text) > 100):
         fontsize = 40
@@ -27,18 +27,21 @@ def create_image(text, author):
     if text[:5] == 'black':
         text = text[5:]
         black_background = True
+    elif API_URL == None:
+        black_background = True
     else:
         black_background = False
 
     if text[0] == '~':
         text = text[1:]
-    else:
+    elif not raw:
         text = "Ok " + str(text)
 
     if re.search(r'[żółćęśąźń]', text) == None:
         emoji = True
         font_path = emoji_font
-        text = "👌 " + str(text)
+        if not raw:
+            text = "👌 " + str(text)
     else:
         emoji = False
         font_path = polish_font
@@ -72,7 +75,7 @@ def create_image(text, author):
     draw = ImageDraw.Draw(img)
     draw.text(position, text, color, font=font)
 
-    if not emoji:
+    if not emoji and not raw:
         img.paste(ok_emoji, (10, min(int(text_height / 2 - 15), 150)))
     return img
 
