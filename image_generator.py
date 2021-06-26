@@ -53,6 +53,11 @@ def create_image(text, author, raw):
         encoding='unic')  # TODO: better font
 
     text_width, text_height = get_text_dimensions(text, font)
+    if text_width > 3000:
+        text_width = 3000
+    if text_height > 3000:
+        text_height = 3000
+
     W = int(text_width * 1.1) + 150
     H = int(text_height * 1.1) + 30
     if (H * 10 < W):
