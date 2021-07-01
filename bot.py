@@ -7,6 +7,7 @@ from PIL import Image
 from io import BytesIO
 from random import randint
 import re
+import asyncio
 
 
 async def response(text, context, author, raw):
@@ -52,6 +53,25 @@ def main():
     @client.command(brief="Website to change your background")
     async def background(ctx):
         await ctx.send("Change your background on our site:\nhttp://vps-348e48ae.vps.ovh.net/")
+
+    @client.command(brief="Set reminder [time] [unit = s,m,h,d,M]")
+    async def remindme(ctx, amount, unit):
+        time_offsets = {'s': 1, 'm': 60, 'h': 3600, 'd': 86400, 'M': 2592000}
+
+        if unit not in time_offsets.keys(): 
+            await ctx.send("Wrong unit type")
+            return
+        try:
+            amount = int(amount)
+            if amount > 0:
+                amount = amount * time_offsets[unit]
+                await ctx.send("Started reminder")
+                await asyncio.sleep(amount)
+                await ctx.reply(f"It's time bro {ctx.author.mention}!")
+                await ctx.author.send("Its time bro!")
+        except:
+            await ctx.send("Time must be an integer")
+            return
 
     client.run(os.getenv("DISCORD_TOKEN"))
 
