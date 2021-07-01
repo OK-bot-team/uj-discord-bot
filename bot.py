@@ -32,10 +32,13 @@ def main():
 
     @client.event
     async def on_ready():
+        await client.change_presence(activity=discord.Game(name="Type ?background"))
         print(f"{client.user.name} has connected")
 
     @client.event
     async def on_message(ctx):
+        await client.process_commands(ctx)
+
         nickname = str(ctx.author)[0:-5]
         text, raw = get_text(ctx.content, nickname)
 
@@ -45,6 +48,10 @@ def main():
                 await ctx.delete()
         elif (randint(1, 2000) >= 1999 and ctx.author != client.user):
             await response(nickname, ctx, ctx.author, raw)
+
+    @client.command(brief="Website to change your background")
+    async def background(ctx):
+        await ctx.send("Change your background on our site:\nhttp://vps-348e48ae.vps.ovh.net/")
 
     client.run(os.getenv("DISCORD_TOKEN"))
 
