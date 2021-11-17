@@ -31,7 +31,7 @@ def get_text(message, author = None):
         return regx.group(1) + " " + author, 3
     regx = re.search(r"(kiedy|where) zdalne", message);
     if regx != None:
-        return "nie ma żadnych zdalnych, zdalne wyśliliście sobie wy, studenci", 3
+        return "Nie ma żadnych zdalnych, zdalne wymyśliliście sobie Wy, studenci.", 3
     return None, 0
 
 def main():
