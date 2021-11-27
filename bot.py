@@ -17,22 +17,24 @@ async def response(text, context, author, count):
         image_binary.seek(0)
         await context.channel.send(file=discord.File(fp=image_binary, filename='image.png'))
 
-#returns text, number of escape symbols
+
+# returns text, number of escape symbols
 # 0- delete original message
 # 1- delete original and do not prepend "ok"
 # 2- delete original and do not prepend "ok" nor emoji
 # 3- do not delete and do not prepend "ok" nor emoji
-def get_text(message, author = None):
+def get_text(message, author=None):
     regx = re.search(r"(?<=;ok)(~*)([\s\S]*)(?=;)", message, re.IGNORECASE);
-    if regx != None:
+    if regx is not None:
         return regx.group(2), len(regx.group(1))
     regx = re.search(r"([\s\S]*) bocie", message, re.IGNORECASE);
-    if regx != None:
+    if regx is not None:
         return regx.group(1) + " " + author, 3
     regx = re.search(r"(kiedy|where) zdalne", message, re.IGNORECASE);
-    if regx != None:
+    if regx is not None:
         return "Nie ma żadnych zdalnych, zdalne wymyśliliście sobie Wy, studenci.", 3
     return None, 0
+
 
 def main():
     client = commands.Bot(command_prefix="?")
@@ -48,14 +50,14 @@ def main():
     async def on_message(ctx):
         await client.process_commands(ctx)
 
-        nickname = str(ctx.author)[0:-5]
+        nickname = ctx.author.display_name
         text, count = get_text(ctx.content, nickname)
 
-        if(text):
+        if text:
             await response(text, ctx, ctx.author, count)
             if count <= 2:
                 await ctx.delete()
-        elif (randint(1, 2000) >= 1999 and ctx.author != client.user):
+        elif randint(1, 2000) >= 1999 and ctx.author != client.user:
             await response(nickname, ctx, ctx.author, count)
 
     @client.command(brief="Website to change your background")
@@ -66,7 +68,7 @@ def main():
     async def remindme(ctx, amount, unit):
         time_offsets = {'s': 1, 'm': 60, 'h': 3600, 'd': 86400, 'M': 2592000}
 
-        if unit not in time_offsets.keys(): 
+        if unit not in time_offsets.keys():
             await ctx.send("Wrong unit type")
             return
         try:
