@@ -22,10 +22,3 @@ jobs:
 
     - name: Build the Docker image
       run: docker build -t uj-discord-bot .
-      
-    - name: Test the Docker cointainer
-      run: |
-        docker run --name uj-discord-bot uj-discord-bot
-        docker stop uj-discord-bot
-        docker rm uj-discord-bot
-        
