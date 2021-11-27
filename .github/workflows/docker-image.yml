@@ -14,7 +14,14 @@ jobs:
 
     steps:
     - uses: actions/checkout@v2
+    - name: Get secrets
+      run: |
+        touch .env
+        echo DISCORD_TOKEN=${{ secrets.DISCORD_TOKEN }} >> .env
+        echo API_URL=${{ secrets.API_URL }} >> .env
+
     - name: Build the Docker image
       run: docker build -t uj-discord-bot .
+      
     - name: Run the Docker container
       run: docker run uj-discord-bot
