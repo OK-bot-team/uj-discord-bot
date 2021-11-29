@@ -71,17 +71,17 @@ def main():
             await ctx.send("Wrong unit type")
             return
 
-        if not isinstance(amount, int):
+        try:
+            amount = int(amount)
+            if amount > 0:
+                amount = amount * time_offsets[unit]
+                await ctx.send("Started reminder")
+                await asyncio.sleep(amount)
+                await ctx.reply(f"It's time bro {ctx.author.mention}!")
+                await ctx.author.send("Its time bro!")
+        except ValueError:
             await ctx.send("Time must be an integer")
             return
-
-        amount = int(amount)
-        if amount > 0:
-            amount = amount * time_offsets[unit]
-            await ctx.send("Started reminder")
-            await asyncio.sleep(amount)
-            await ctx.reply(f"It's time bro {ctx.author.mention}!")
-            await ctx.author.send("Its time bro!")
 
     client.run(os.getenv("DISCORD_TOKEN"))
 
