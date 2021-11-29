@@ -1,9 +1,11 @@
-from PIL import Image, ImageDraw, ImageFont
-from io import BytesIO
-import requests
-from dotenv import load_dotenv
 import os
 import re
+import requests
+
+from PIL import Image, ImageDraw, ImageFont
+from io import BytesIO
+from dotenv import load_dotenv
+
 
 # API url with slash!
 load_dotenv()
@@ -14,6 +16,7 @@ emoji_font = "fonts/Symbola.ttf"
 ok_emoji = Image.open("images/ok.png")
 img_text_measure = Image.new('RGB', (1, 1))
 draw_text_measure = ImageDraw.Draw(img_text_measure)
+
 
 def get_text_dimensions(text, font):
     return draw_text_measure.textsize(text, font)
@@ -27,7 +30,7 @@ def create_image(text, author, count):
     if text[:5] == 'black':
         text = text[5:]
         black_background = True
-    elif API_URL == None:
+    elif API_URL is None:
         black_background = True
     else:
         black_background = False
@@ -35,7 +38,7 @@ def create_image(text, author, count):
     if count == 0:
         text = "Ok " + str(text)
 
-    if re.search(r'[żółćęśąźń]', text) == None:
+    if re.search(r'[żółćęśąźń]', text) is None:
         emoji = True
         font_path = emoji_font
         if count <= 1:
@@ -78,7 +81,7 @@ def create_image(text, author, count):
     draw = ImageDraw.Draw(img)
     draw.text(position, text, color, font=font)
 
-    if not emoji and count <=1:
+    if not emoji and count <= 1:
         img.paste(ok_emoji, (10, min(int(text_height / 2 - 15), 150)))
     return img
 
