@@ -1,13 +1,13 @@
-import os
 import discord
+import os
+import re
+import asyncio
+
 from dotenv import load_dotenv
 from discord.ext import commands
 from image_generator import create_image
-from PIL import Image
 from io import BytesIO
 from random import randint
-import re
-import asyncio
 
 
 async def response(text, context, author, count):
@@ -24,13 +24,13 @@ async def response(text, context, author, count):
 # 2- delete original and do not prepend "ok" nor emoji
 # 3- do not delete and do not prepend "ok" nor emoji
 def get_text(message, author=None):
-    regx = re.search(r"(?<=;ok)(~*)([\s\S]*)(?=;)", message, re.IGNORECASE);
+    regx = re.search(r"(?<=;ok)(~*)([\s\S]*)(?=;)", message, re.IGNORECASE)
     if regx is not None:
         return regx.group(2), len(regx.group(1))
-    regx = re.search(r"([\s\S]*) bocie", message, re.IGNORECASE);
+    regx = re.search(r"([\s\S]*) bocie", message, re.IGNORECASE)
     if regx is not None:
         return regx.group(1) + " " + author, 3
-    regx = re.search(r"(kiedy|where) zdalne", message, re.IGNORECASE);
+    regx = re.search(r"(kiedy|where) zdalne", message, re.IGNORECASE)
     if regx is not None:
         return "Nie ma żadnych zdalnych, zdalne wymyśliliście sobie Wy, studenci.", 3
     return None, 0
@@ -38,7 +38,6 @@ def get_text(message, author=None):
 
 def main():
     client = commands.Bot(command_prefix="?")
-
     load_dotenv()
 
     @client.event
@@ -71,6 +70,7 @@ def main():
         if unit not in time_offsets.keys():
             await ctx.send("Wrong unit type")
             return
+
         try:
             amount = int(amount)
             if amount > 0:
@@ -79,7 +79,7 @@ def main():
                 await asyncio.sleep(amount)
                 await ctx.reply(f"It's time bro {ctx.author.mention}!")
                 await ctx.author.send("Its time bro!")
-        except:
+        except ValueError:
             await ctx.send("Time must be an integer")
             return
 
