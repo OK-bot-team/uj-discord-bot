@@ -69,10 +69,10 @@ def create_image(text, author, count):
     position = ((W - text_width) / 2, (H - text_height) / 2)
 
     background = None
-    if(not black_background):
+    if not black_background:
         background = get_background(author.id)
 
-    if (background is None):
+    if background is None:
         img = Image.new('RGB', (W, H))
     else:
         img = Image.open(BytesIO(background))
@@ -87,6 +87,9 @@ def create_image(text, author, count):
 
 
 def get_background(id):
+    if API_URL == "":
+        return
+
     url = f'{API_URL}api/get-background/{id}'
     try:
         response = requests.get(url, stream=True)
