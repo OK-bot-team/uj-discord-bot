@@ -63,6 +63,9 @@ class Bot(BotBase):
             nickname = message.author.display_name
             text, count = get_text(message.content, nickname)
 
+            if len(message.content) == 0 or message.content[0] == self.PREFIX:
+                return
+
             if text:
                 await send_response(text, message, message.author, count)
 
@@ -82,7 +85,7 @@ def get_bot():
 
 @bot.command()
 async def tic(ctx):
-    """Starts a tic-tac-toe game with yourself."""
+    """Starts a tic-tac-toe game."""
     await ctx.send("Tic Tac Toe: X goes first", view=TicTacToe())
 
 
