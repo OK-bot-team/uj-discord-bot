@@ -1,4 +1,4 @@
-from bot import get_text
+from source.response_utils.get_text import get_text
 
 def test_get_text():
     text_none = ""
