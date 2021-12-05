@@ -80,12 +80,6 @@ def get_bot():
     return bot
 
 
-@bot.slash_command(guild_ids=[848921520776413213])
-async def hello(ctx, name: str = None):
-    name = name or ctx.author.name
-    await ctx.respond(f"Hello {name}!")
-
-
 @bot.command()
 async def tic(ctx):
     """Starts a tic-tac-toe game with yourself."""
