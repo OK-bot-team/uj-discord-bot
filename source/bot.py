@@ -6,8 +6,11 @@ from discord.ext.commands import CommandNotFound
 from dotenv import load_dotenv
 from random import randint
 
-from .utils.get_text import get_text
-from .utils.send_response import send_response
+from .commands.remindme import remindme_util
+from .commands.tictactoe import TicTacToe
+from .commands.google import Google
+from .response_utils.get_text import get_text
+from .response_utils.send_response import send_response
 
 
 class Bot(BotBase):
@@ -70,6 +73,31 @@ class Bot(BotBase):
                 await send_response(nickname, message, message.author, count)
 
 
-if __name__ == "__main__":
-    bot = Bot()
-    bot.run()
+bot = Bot()
+
+
+def get_bot():
+    return bot
+
+
+@bot.slash_command(guild_ids=[848921520776413213])
+async def hello(ctx, name: str = None):
+    name = name or ctx.author.name
+    await ctx.respond(f"Hello {name}!")
+
+
+@bot.command()
+async def tic(ctx):
+    """Starts a tic-tac-toe game with yourself."""
+    await ctx.send("Tic Tac Toe: X goes first", view=TicTacToe())
+
+
+@bot.command()
+async def google(ctx, *, query: str):
+    """Returns a google link for a query"""
+    await ctx.send(f"Google Result for: `{query}`", view=Google(query))
+
+
+@bot.command(brief="Set reminder [time] [unit = s,m,h,d,M]")
+async def remindme(ctx, amount, unit):
+    await remindme_util(ctx, amount, unit)
