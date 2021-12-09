@@ -98,3 +98,8 @@ async def google(ctx, *, query: str):
 @bot.command(brief="Set reminder [time] [unit = s,m,h,d,M]")
 async def remindme(ctx, amount, unit):
     await remindme_util(ctx, amount, unit)
+
+
+@bot.command(brief="Get current link to website, where you can change your response background.")
+async def background(ctx):
+    await ctx.send("Change your background on our site:\nhttp://vps-348e48ae.vps.ovh.net/")
