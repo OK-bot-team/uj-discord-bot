@@ -26,9 +26,17 @@ class Bot(BotBase):
         load_dotenv()
 
         self.TOKEN = os.getenv("DISCORD_TOKEN")
-
-        print("Bot is active.")
-        super().run(self.TOKEN, reconnect=True)
+        
+        if self.TOKEN is None:
+            print(f"Token is not initialized. Be sure to set environmental variable DISCORD_TOKEN")
+            exit(1)
+        
+        try:
+            super().run(self.TOKEN, reconnect=True)
+            print("Bot is active.")
+        except BaseException as err:
+            print(f"Unexpected exception while initializing bot: {type(err)} - {err}")
+            exit(2)
 
     async def on_connect(self):
         print("OkBot has connected.")
