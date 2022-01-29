@@ -80,7 +80,7 @@ class Bot(BotBase):
                 if count <= 2:
                     await message.delete()
 
-            elif randint(1, 2000) >= 1999:
+            elif randint(1, 4000) >= 3999:
                 await send_response(nickname, message, message.author, count)
 
 
