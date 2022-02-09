@@ -58,7 +58,7 @@ class Bot(BotBase):
 
     async def on_command_error(self, ctx, exc):
         if isinstance(exc, CommandNotFound):
-            await ctx.send("Wrong command")
+            await ctx.send("Co tam wariacie?")
         elif hasattr(exc, ["original"]):
             raise exc.original
         else:
