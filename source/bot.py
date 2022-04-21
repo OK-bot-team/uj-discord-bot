@@ -19,18 +19,19 @@ class Bot(BotBase):
         self.PREFIX = "?"
 
         super().__init__(
-            command_prefix=self.PREFIX
+            command_prefix=self.PREFIX,
+            intents=discord.Intents.all()
         )
 
     def run(self):
         load_dotenv()
 
         self.TOKEN = os.getenv("DISCORD_TOKEN")
-        
+
         if self.TOKEN is None:
-            print(f"Token is not initialized. Be sure to set environmental variable DISCORD_TOKEN")
+            print("Token is not initialized. Be sure to set environmental variable DISCORD_TOKEN")
             exit(1)
-        
+
         try:
             super().run(self.TOKEN, reconnect=True)
             print("Bot is active.")
@@ -66,8 +67,8 @@ class Bot(BotBase):
 
     async def on_message(self, message):
         if not message.author.bot:
+            print(message.content)
             await self.process_commands(message)
-
             nickname = message.author.display_name
             text, count = get_text(message.content, nickname)
 
