@@ -8,7 +8,8 @@ from urllib.parse import quote_plus
 class Google(discord.ui.View):
     def __init__(self, query: str):
         super().__init__()
-        # we need to quote the query string to make a valid url. Discord will raise an error if it isn't valid.
+        # we need to quote the query string to make a valid url.
+        # Discord will raise an error if it isn't valid.
         query = quote_plus(query)
         url = f"https://www.google.com/search?q={query}"
 

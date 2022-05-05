@@ -2,6 +2,7 @@ import os
 import re
 import requests
 
+from typing import Optional
 from PIL import Image, ImageDraw, ImageFont
 from io import BytesIO
 from dotenv import load_dotenv
@@ -11,69 +12,49 @@ from dotenv import load_dotenv
 load_dotenv()
 API_URL = os.getenv("API_URL")
 
-polish_font = "fonts/font.otf"
-emoji_font = "fonts/Symbola.ttf"
-ok_emoji = Image.open("images/ok.png")
-img_text_measure = Image.new('RGB', (1, 1))
-draw_text_measure = ImageDraw.Draw(img_text_measure)
+POLISH_FONT = "fonts/font.otf"
+EMOJI_FONT = "fonts/Symbola.ttf"
+OK_EMOJI = Image.open("images/ok.png")
+IMG_TEXT_MEASURE = Image.new("RGB", (1, 1))
+DRAW_TEXT_MEASURE = ImageDraw.Draw(IMG_TEXT_MEASURE)
+TEXT_SIZE_LIMIT = 3000
 
 
-def get_text_dimensions(text, font):
-    return draw_text_measure.textsize(text, font)
+def get_text_dimensions(text: str, font):
+    width, height = DRAW_TEXT_MEASURE.textsize(text, font)
+    width = TEXT_SIZE_LIMIT if width > TEXT_SIZE_LIMIT else width
+    height = TEXT_SIZE_LIMIT if height > TEXT_SIZE_LIMIT else height
+    return width, height
 
 
-def create_image(text, author, count):
-    fontsize = 80
-    if (len(text) > 100):
-        fontsize = 40
+def contains_polish_letters(text: str) -> str:
+    return re.search(r"[żółćęśąźń]", text) is not None
 
-    if text[:5] == 'black':
-        text = text[5:]
-        black_background = True
-    elif API_URL is None:
-        black_background = True
+
+def create_image(response: dict[str, bool, bool], author: str) -> Image:
+    text = response["text"]
+    fontsize = 40 if len(text) > 100 else 80
+
+    if contains_polish_letters(text) is True:
+        font_path = POLISH_FONT
     else:
-        black_background = False
-
-    if count == 0:
-        text = "Ok " + str(text)
-
-    if re.search(r'[żółćęśąźń]', text) is None:
-        emoji = True
-        font_path = emoji_font
-        if count <= 1:
-            text = "👌 " + str(text)
-    else:
-        emoji = False
-        font_path = polish_font
+        font_path = EMOJI_FONT
 
     color = (255, 255, 255)
     font = ImageFont.truetype(
-        font_path,
-        fontsize,
-        encoding='unic')  # TODO: better font
+        font_path, fontsize, encoding="unic"
+    )  # TODO: better font
 
     text_width, text_height = get_text_dimensions(text, font)
-    if text_width > 3000:
-        text_width = 3000
-    if text_height > 3000:
-        text_height = 3000
 
     W = int(text_width * 1.1) + 150
     H = int(text_height * 1.1) + 30
-    if (H * 10 < W):
-        H = int(W / 10)
-
-    print(text_width, text_height)
-    print("Image size: ", W, H,)
+    H = W // 10 if (10 * H < W) else H
     position = ((W - text_width) / 2, (H - text_height) / 2)
 
-    background = None
-    if not black_background:
-        background = get_background(author.id)
-
+    background = get_background(author.id)
     if background is None:
-        img = Image.new('RGB', (W, H))
+        img = Image.new("RGB", (W, H))
     else:
         img = Image.open(BytesIO(background))
         img = img.resize((W, H))
@@ -81,16 +62,16 @@ def create_image(text, author, count):
     draw = ImageDraw.Draw(img)
     draw.text(position, text, color, font=font)
 
-    if not emoji and count <= 1:
-        img.paste(ok_emoji, (10, min(int(text_height / 2 - 15), 150)))
+    if response["add_ok"] is True:
+        img.paste(OK_EMOJI, (10, min(int(text_height / 2 - 15), 150)))
     return img
 
 
-def get_background(id):
+def get_background(id: str) -> Optional[bytes]:
     if API_URL == "":
         return
 
-    url = f'{API_URL}api/get-background/{id}'
+    url = f"{API_URL}api/get-background/{id}"
     try:
         response = requests.get(url, stream=True)
     except requests.ConnectionError:
@@ -100,5 +81,4 @@ def get_background(id):
     if response.status_code == 200:
         return response.content
     else:
-        print("ERROR: " + str(response.status_code))
-        return
+        print("ERROR: " + str(response.status_code), flush=True)
