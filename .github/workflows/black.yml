@@ -3,11 +3,19 @@ name: Check with black
 on: [push, pull_request]
 
 jobs:
-  lint:
+  format:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v3
-      - uses: psf/black@stable
-      - name: run black format
+      - name: Set up Python ${{ matrix.python-version }}
+        uses: actions/setup-python@v2
+        with:
+          python-version: ${{ matrix.python-version }}
+      - name: Install dependencies
+        run: |
+          pip install -U git+https://github.com/Pycord-Development/pycord
+          python -m pip install --upgrade pip
+          python -m pip install black
+      - name: format with black
         run: |
           black -v .
