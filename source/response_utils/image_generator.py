@@ -64,7 +64,10 @@ def create_image(response: dict[str, bool, bool], author: str) -> Image:
     draw.text(position, text, color, font=font)
 
     if font_path == POLISH_FONT:
-        img.paste(OK_EMOJI, (10, min(int(text_height / 2 - 15), 150)))
+        ok_font = font = ImageFont.truetype(EMOJI_FONT, 80, encoding="unic")
+        draw.text(
+            (10, min(int(text_height / 2 - 15), 150)), "👌", color, font=ok_font
+        )
 
     return img
 
