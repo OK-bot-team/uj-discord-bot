@@ -14,7 +14,6 @@ API_URL = os.getenv("API_URL")
 
 POLISH_FONT = "fonts/font.otf"
 EMOJI_FONT = "fonts/Symbola.ttf"
-OK_EMOJI = Image.open("images/ok.png")
 IMG_TEXT_MEASURE = Image.new("RGB", (1, 1))
 DRAW_TEXT_MEASURE = ImageDraw.Draw(IMG_TEXT_MEASURE)
 TEXT_SIZE_LIMIT = 3000
