@@ -39,6 +39,7 @@ def create_image(response: dict[str, bool, bool], author: str) -> Image:
         font_path = POLISH_FONT
     else:
         font_path = EMOJI_FONT
+        text = f"👌 {text}"
 
     color = (255, 255, 255)
     font = ImageFont.truetype(
@@ -62,8 +63,9 @@ def create_image(response: dict[str, bool, bool], author: str) -> Image:
     draw = ImageDraw.Draw(img)
     draw.text(position, text, color, font=font)
 
-    if response["add_ok"] is True:
+    if font_path == POLISH_FONT:
         img.paste(OK_EMOJI, (10, min(int(text_height / 2 - 15), 150)))
+
     return img
 
 
