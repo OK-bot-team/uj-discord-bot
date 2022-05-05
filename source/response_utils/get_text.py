@@ -1,24 +1,34 @@
 import re
+from typing import Optional, Tuple
 
 
-# returns text, number of escape symbols
-# 0- delete original message
-# 1- delete original and do not prepend "ok"
-# 2- delete original and do not prepend "ok" nor emoji
-# 3- do not delete and do not prepend "ok" nor emoji
-def get_text(message, author=None):
+def get_text(message: str, author: str = None) -> Optional[Tuple[str, bool]]:
+    response = {"text": None, "delete": False, "add_ok": False}
     regx = re.search(r"(?<=;ok)(~*)([\s\S]*)(?=;)", message, re.IGNORECASE)
 
     if regx is not None:
-        return regx.group(2), len(regx.group(1))
+        if regx.group(1):
+            if len(regx.group(1)) == 1:  # ok~
+                response["delete"], response["add_ok"] = False, True
+            elif len(regx.group(1)) == 2:  # ok~~
+                response["delete"], response["add_ok"] = True, False
+        else:
+            response["delete"], response["add_ok"] = True, True
 
-    regx = re.search(r"([\s\S]*) bocie", message, re.IGNORECASE)
+        response["text"] = regx.group(2)
+        return response
+
+    regx = re.search(r"([\s\S]*)bocie", message, re.IGNORECASE)
 
     if regx is not None:
-        return regx.group(1) + " " + author, 3
+        response["text"] = f"{regx.group(1)}{author}"
+        return response
 
     regx = re.search(r"(kiedy|where) zdalne", message, re.IGNORECASE)
 
     if regx is not None:
-        return "Nie ma żadnych zdalnych, zdalne wymyśliliście sobie Wy, studenci.", 3
-    return None, 0
+        response[
+            "text"
+        ] = "Nie ma żadnych zdalnych, zdalne wymyśliliście sobie Wy, studenci"
+
+    return response

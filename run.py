@@ -1,4 +1,3 @@
-from source.bot import get_bot
+from source.bot import start_bot
 
-bot = get_bot()
-bot.run()
+start_bot()
