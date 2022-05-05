@@ -19,7 +19,7 @@ git clone git@github.com:OK-bot-team/uj-discord-bot.git
 
 Create necessary environment variables in repository, for example with .env file. Example file:
 ```
-API_URL=<API_BACKED_URL>
+API_URL=<API_BACKEND_URL>
 DISCORD_TOKEN=<YOUR-DISCORD-BOT-TOKEN>
 ```
 
