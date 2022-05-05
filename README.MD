@@ -1,4 +1,9 @@
-# 🆗Bot ![Build](https://img.shields.io/github/workflow/status/OK-bot-team/uj-discord-bot/Tests)
+# 🆗Bot 
+![Build](https://img.shields.io/github/workflow/status/OK-bot-team/uj-discord-bot/Tests) 
+![License](https://img.shields.io/github/license/OK-bot-team/uj-discord-bot)
+![Black](https://img.shields.io/static/v1?label=code%20style&message=black&color=black&style=flat-squar)
+![TopLanguage](https://img.shields.io/github/languages/top/OK-bot-team/uj-discord-bot)
+
 ## Installation
 
 You need to have [Docker](https://docs.docker.com/get-docker/) software installed. 
