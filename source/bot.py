@@ -145,6 +145,9 @@ async def stats(ctx):
         if (ctx.author.id, ctx.channel.id) in bot.cache:
             bot.cache[(ctx.author.id, ctx.channel.id)] += 1
             count = bot.cache[(ctx.author.id, ctx.channel.id)]
+        else:
+            bot.cache[(ctx.author.id, ctx.channel.id)] = 1
+            count = bot.cache[(ctx.author.id, ctx.channel.id)]
 
         await ctx.send(
             f"{ctx.author.display_name} has {count} messages in {ctx.channel}"
