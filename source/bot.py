@@ -76,6 +76,17 @@ class Bot(BotBase):
 
     async def on_message(self, message) -> None:
         if not message.author.bot:
+            if (
+                message.channel.id in self.calculated_channels
+                and (
+                    message.author.id,
+                    message.channel.id,
+                )
+                in self.cache
+                and message.content[0] != self.PREFIX
+            ):
+                self.cache[(message.author.id, message.channel.id)] += 1
+
             await self.process_commands(message)
 
             if len(message.content) == 0 or message.content[0] == self.PREFIX:
