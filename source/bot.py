@@ -18,6 +18,8 @@ class Bot(BotBase):
         self.ready = False
         self.PREFIX = "?"
         self.cache = {}
+        self.calculating_channels = set()
+        self.calculated_channels = set()
 
         super().__init__(
             command_prefix=self.PREFIX, intents=discord.Intents.all()
@@ -112,12 +114,14 @@ async def remindme(ctx, amount, unit) -> None:
 
 @bot.command()
 async def stats(ctx):
-    await ctx.send("Calculating...")
-    counter = 0
-    if (ctx.author.id, ctx.channel.id) in bot.cache:
-        bot.cache[(ctx.author.id, ctx.channel.id)] += 1
-        counter = bot.cache[(ctx.author.id, ctx.channel.id)]
-    else:
+    if (
+        ctx.channel.id not in bot.calculating_channels
+        and ctx.channel.id not in bot.calculated_channels
+    ):
+        bot.calculating_channels.add(ctx.channel.id)
+        await ctx.send("Calculating...")
+
+        count = 0
         async for msg in ctx.channel.history(limit=None):
             if (msg.author.id, ctx.channel.id) not in bot.cache:
                 bot.cache[(msg.author.id, ctx.channel.id)] = 1
@@ -125,13 +129,26 @@ async def stats(ctx):
                 bot.cache[(msg.author.id, ctx.channel.id)] += 1
 
             if msg.author == ctx.author:
-                counter += 1
+                count += 1
 
-    await ctx.send(
-        "{} has {} messages in {}.".format(
-            ctx.author.display_name, str(counter), ctx.channel
-        ),
-    )
+        if await ctx.send(
+            f"{ctx.author.display_name} has {count} messages in {ctx.channel}"
+        ):
+            bot.calculated_channels.add(ctx.channel.id)
+            bot.calculating_channels.remove(ctx.channel.id)
+
+    elif ctx.channel.id not in bot.calculated_channels:
+        await ctx.send(
+            "Calculation for this channel is in progress, please wait."
+        )
+    else:
+        if (ctx.author.id, ctx.channel.id) in bot.cache:
+            bot.cache[(ctx.author.id, ctx.channel.id)] += 1
+            count = bot.cache[(ctx.author.id, ctx.channel.id)]
+
+        await ctx.send(
+            f"{ctx.author.display_name} has {count} messages in {ctx.channel}"
+        )
 
 
 @bot.command(
