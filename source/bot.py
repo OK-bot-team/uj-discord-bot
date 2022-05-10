@@ -17,6 +17,7 @@ class Bot(BotBase):
     def __init__(self) -> None:
         self.ready = False
         self.PREFIX = "?"
+        self.cache = {}
 
         super().__init__(
             command_prefix=self.PREFIX, intents=discord.Intents.all()
@@ -68,14 +69,11 @@ class Bot(BotBase):
     async def on_command_error(self, ctx, exc):
         if isinstance(exc, CommandNotFound):
             await ctx.send("Co tam wariacie?")
-        elif hasattr(exc, ["original"]):
-            raise exc.original
         else:
             raise exc
 
-    async def on_message(self, message: str) -> None:
+    async def on_message(self, message) -> None:
         if not message.author.bot:
-            print(message.content, flush=True)
             await self.process_commands(message)
 
             if len(message.content) == 0 or message.content[0] == self.PREFIX:
@@ -110,6 +108,26 @@ async def google(ctx, *, query: str) -> None:
 @bot.command(brief="Set reminder [time] [unit = s,m,h,d,M]")
 async def remindme(ctx, amount, unit) -> None:
     await remindme_util(ctx, amount, unit)
+
+
+@bot.command()
+async def stats(ctx):
+    await ctx.send("Calculating...")
+    counter = 0
+    if (ctx.author.id, ctx.channel.id) in bot.cache:
+        bot.cache[(ctx.author.id, ctx.channel.id)] += 1
+        counter = bot.cache[(ctx.author.id, ctx.channel.id)]
+    else:
+        async for msg in ctx.channel.history(limit=10000):
+            if msg.author == ctx.author:
+                counter += 1
+        bot.cache[(ctx.author.id, ctx.channel.id)] = counter
+
+    await ctx.send(
+        "{} has {} messages in {}.".format(
+            ctx.author.display_name, str(counter), ctx.channel
+        ),
+    )
 
 
 @bot.command(
