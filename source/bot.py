@@ -118,10 +118,14 @@ async def stats(ctx):
         bot.cache[(ctx.author.id, ctx.channel.id)] += 1
         counter = bot.cache[(ctx.author.id, ctx.channel.id)]
     else:
-        async for msg in ctx.channel.history(limit=10000):
+        async for msg in ctx.channel.history(limit=None):
+            if (msg.author.id, ctx.channel.id) not in bot.cache:
+                bot.cache[(msg.author.id, ctx.channel.id)] = 1
+            else:
+                bot.cache[(msg.author.id, ctx.channel.id)] += 1
+
             if msg.author == ctx.author:
                 counter += 1
-        bot.cache[(ctx.author.id, ctx.channel.id)] = counter
 
     await ctx.send(
         "{} has {} messages in {}.".format(
