@@ -12,8 +12,8 @@ from dotenv import load_dotenv
 load_dotenv()
 API_URL = os.getenv("API_URL")
 
-POLISH_FONT = "fonts/font.otf"
-EMOJI_FONT = "fonts/Symbola.ttf"
+TEXT_FONT = "fonts/Roboto/Roboto-Regular.ttf"
+EMOJI_FONT = "fonts/Noto_Emoji/NotoEmoji-Regular.ttf"
 IMG_TEXT_MEASURE = Image.new("RGB", (1, 1))
 DRAW_TEXT_MEASURE = ImageDraw.Draw(IMG_TEXT_MEASURE)
 TEXT_SIZE_LIMIT = 3000
@@ -34,15 +34,9 @@ def create_image(response: dict[str, bool, bool], author: str) -> Image:
     text = response["text"]
     fontsize = 40 if len(text) > 100 else 80
 
-    if contains_polish_letters(text) is True:
-        font_path = POLISH_FONT
-    else:
-        font_path = EMOJI_FONT
-        text = f"👌 {text}"
-
     color = (255, 255, 255)
     font = ImageFont.truetype(
-        font_path, fontsize, encoding="unic"
+        TEXT_FONT, fontsize, encoding="unic"
     )  # TODO: better font
 
     text_width, text_height = get_text_dimensions(text, font)
@@ -62,11 +56,13 @@ def create_image(response: dict[str, bool, bool], author: str) -> Image:
     draw = ImageDraw.Draw(img)
     draw.text(position, text, color, font=font)
 
-    if font_path == POLISH_FONT:
-        ok_font = font = ImageFont.truetype(EMOJI_FONT, 80, encoding="unic")
-        draw.text(
-            (10, min(int(text_height / 2 - 15), 150)), "👌", color, font=ok_font
-        )
+    emoji_font = font = ImageFont.truetype(EMOJI_FONT, 80, encoding="unic")
+    draw.text(
+        (10, min(int(text_height / 2 - 15), 150)),
+        "👌",
+        color,
+        font=emoji_font,
+    )
 
     return img
 
