@@ -3,9 +3,13 @@ import os
 
 from discord.ext.commands import Bot as BotBase
 from discord.ext.commands import CommandNotFound
+from discord.ext.commands import cooldown, BucketType, CommandOnCooldown
+
 from dotenv import load_dotenv
 from random import randint
 
+
+from .commands.check_baca import check_baca
 from .commands.remindme import remindme_util
 from .commands.tictactoe import TicTacToe
 from .commands.google import Google
@@ -71,6 +75,8 @@ class Bot(BotBase):
     async def on_command_error(self, ctx, exc):
         if isinstance(exc, CommandNotFound):
             await ctx.send("Co tam wariacie?")
+        elif isinstance(exc, CommandOnCooldown):
+            await ctx.send(exc)
         else:
             raise exc
 
@@ -104,6 +110,17 @@ class Bot(BotBase):
 
 
 bot = Bot()
+
+
+@bot.command()
+@cooldown(1, 60, BucketType.guild)
+async def baca(ctx) -> None:
+    """check if baca is online"""
+
+    if check_baca():
+        await ctx.send("Baca is up!")
+    else:
+        await ctx.send("Baca is down!")
 
 
 @bot.command()
