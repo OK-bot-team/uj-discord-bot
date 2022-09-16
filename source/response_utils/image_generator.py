@@ -59,7 +59,7 @@ def create_image(response: dict[str, bool, bool], author: str) -> Image:
     emoji_font = font = ImageFont.truetype(EMOJI_FONT, 80, encoding="unic")
     draw.text(
         (10, min(int(text_height // 2 - 15), 250)),
-        "🍆",
+        "🍆 ok",
         color,
         font=emoji_font,
     )
