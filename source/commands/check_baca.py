@@ -9,10 +9,7 @@ def check_baca() -> bool:
             BACA_URL, verify=False, timeout=10
         ).status_code
 
-        if baca_status_code == 200:
-            return True
-        else:
-            return False
+        return baca_status_code == 200
     except (
         requests.ReadTimeout,
         requests.ConnectTimeout,
