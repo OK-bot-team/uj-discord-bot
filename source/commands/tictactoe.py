@@ -25,25 +25,25 @@ class TicTacToeButton(discord.ui.Button["TicTacToe"]):
 
         if view.current_player == view.CROSS:
             self.style = discord.ButtonStyle.danger
-            self.label = "CROSS"
+            self.label = "X"
             self.disabled = True
             view.board[self.y][self.CROSS] = view.CROSS
             view.current_player = view.CIRCLE
-            content = "It is now CIRCLE's turn"
+            content = "It is now O's turn"
         else:
             self.style = discord.ButtonStyle.success
-            self.label = "CIRCLE"
+            self.label = "O"
             self.disabled = True
             view.board[self.y][self.CROSS] = view.CIRCLE
             view.current_player = view.CROSS
-            content = "It is now CROSS's turn"
+            content = "It is now X's turn"
 
         winner = view.check_board_winner()
         if winner is not None:
             if winner == view.CROSS:
-                content = "CROSS won!"
+                content = "X won!"
             elif winner == view.CIRCLE:
-                content = "CIRCLE won!"
+                content = "O won!"
             else:
                 content = "It's a TIE!"
 
