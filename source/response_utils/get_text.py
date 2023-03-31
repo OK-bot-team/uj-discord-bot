@@ -1,11 +1,12 @@
 import re
-from typing import Optional, Tuple
+from typing import Optional, Dict
+from datetime import datetime
 
 
-def get_text(message: str, author: str = None) -> Optional[Tuple[str, bool]]:
-    response = {"text": None, "delete": False, "add_ok": False}
+def get_text(message: str, author: str = None) -> Optional[Dict[str, bool]]:
+    response = {"text": None, "delete": False, "add_ok": False, "image": False}
+
     regx = re.search(r"(?<=;ok)(~*)([\s\S]*)(?=;)", message, re.IGNORECASE)
-
     if regx is not None:
         if regx.group(1):
             if len(regx.group(1)) == 1:  # ok~
@@ -16,19 +17,29 @@ def get_text(message: str, author: str = None) -> Optional[Tuple[str, bool]]:
             response["delete"], response["add_ok"] = True, True
 
         response["text"] = regx.group(2)
+        response["image"] = True
         return response
 
     regx = re.search(r"([\s\S]*)bocie", message, re.IGNORECASE)
-
     if regx is not None:
         response["text"] = f"{regx.group(1)}{author}"
+        response["image"] = True
         return response
 
     regx = re.search(r"(kiedy|where) zdalne", message, re.IGNORECASE)
-
     if regx is not None:
         response[
             "text"
         ] = "Nie ma żadnych zdalnych, zdalne wymyśliliście sobie Wy, studenci"
+        response["image"] = True
+        return response
+
+    regx = re.search(r"deprecatedDelevoCry", message)
+    if regx is not None:
+        response["text"] = ""
+        response["text"] = "----------\n[" + datetime.today().strftime('%Y-%m-%d %H:%M:%S') + \
+            "] WARNING: Deprecated emoji call.\n :deprecatedDelevoCry: is deprecated.\n" + \
+            str(author) + " please use the new cry emoji.\n----------"
+        return response
 
     return response
