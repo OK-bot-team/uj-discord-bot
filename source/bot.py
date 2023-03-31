@@ -98,7 +98,7 @@ class Bot(BotBase):
                 return
 
             nickname = message.author.display_name
-            response = get_text(message.content, nickname)
+            response = get_text(message.content, message.author, nickname)
 
             if response["text"] is not None:
                 await send_response(response, message, message.author)

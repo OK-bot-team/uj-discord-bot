@@ -122,3 +122,19 @@ def test_get_text():
     assert response["delete"] is False
     assert response["add_ok"] is False
     assert response["image"] is False
+
+    text_14 = "deprecatedDelevoCry"
+    response = get_text(text_14)
+    assert response["text"] is None
+    assert response["delete"] is False
+    assert response["add_ok"] is False
+    assert response["image"] is False
+
+    text_15 = "<:deprecatedDelevoCry:123456789>"
+    response = get_text(text_15)
+    assert response["text"] is not None
+    assert response["delete"] is False
+    assert response["add_ok"] is False
+    assert response["image"] is False
+    assert re.search(r"WARNING: Deprecated emoji call",
+                     response["text"]) is not None

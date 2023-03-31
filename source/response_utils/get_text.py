@@ -3,8 +3,9 @@ from typing import Optional, Dict
 from datetime import datetime
 
 
-def get_text(message: str, author: str = None) -> Optional[Dict[str, bool]]:
-    response = {"text": None, "delete": False, "add_ok": False, "image": False}
+def get_text(message: str, author, nickname: str = None) -> Optional[Dict[str, bool]]:
+    response = {"text": None, "delete": False,
+                "add_ok": False, "image": False}
 
     regx = re.search(r"(?<=;ok)(~*)([\s\S]*)(?=;)", message, re.IGNORECASE)
     if regx is not None:
@@ -34,12 +35,11 @@ def get_text(message: str, author: str = None) -> Optional[Dict[str, bool]]:
         response["image"] = True
         return response
 
-    regx = re.search(r"deprecatedDelevoCry", message)
+    regx = re.search(r"<:deprecatedDelevoCry:[0-9]*>", message)
     if regx is not None:
         response["text"] = ""
-        response["text"] = "----------\n[" + datetime.today().strftime('%Y-%m-%d %H:%M:%S') + \
-            "] WARNING: Deprecated emoji call.\n :deprecatedDelevoCry: is deprecated.\n" + \
-            str(author) + " please use the new cry emoji.\n----------"
+        response["text"] = f"----------\n[{datetime.today().strftime('%Y-%m-%d %H:%M:%S')}] WARNING: Deprecated emoji call.\n <:deprecatedDelevoCry:917741279012610078> is deprecated.\n{author.mention} please use the new <:baniaCry:1067860950700531842> cry emoji instead.\n----------"
+        response["mention"] = True
         return response
 
     return response
