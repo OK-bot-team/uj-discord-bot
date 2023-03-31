@@ -3,7 +3,7 @@ from typing import Optional, Dict
 from datetime import datetime
 
 
-def get_text(message: str, author: str = None) -> Optional[dict[str, bool]]:
+def get_text(message: str, author: str = None) -> Optional[Dict[str, bool]]:
     response = {"text": None, "delete": False, "add_ok": False, "image": False}
 
     regx = re.search(r"(?<=;ok)(~*)([\s\S]*)(?=;)", message, re.IGNORECASE)
