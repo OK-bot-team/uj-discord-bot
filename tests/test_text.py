@@ -1,4 +1,5 @@
 from source.response_utils.get_text import get_text
+import re
 
 
 def test_get_text():
@@ -7,6 +8,7 @@ def test_get_text():
         "text": None,
         "delete": False,
         "add_ok": False,
+        "image": False,
     }
 
     text_wrong = "abc"
@@ -14,6 +16,7 @@ def test_get_text():
         "text": None,
         "delete": False,
         "add_ok": False,
+        "image": False,
     }
 
     text_1 = ";okabc;"
@@ -21,12 +24,14 @@ def test_get_text():
         "text": "abc",
         "delete": True,
         "add_ok": True,
+        "image": True,
     }
     text_2 = ";Okabc;"
     assert get_text(text_2) == {
         "text": "abc",
         "delete": True,
         "add_ok": True,
+        "image": True,
     }
 
     text_3 = ";oKabc;"
@@ -34,6 +39,7 @@ def test_get_text():
         "text": "abc",
         "delete": True,
         "add_ok": True,
+        "image": True,
     }
 
     text_4 = ";OKabc;"
@@ -41,6 +47,7 @@ def test_get_text():
         "text": "abc",
         "delete": True,
         "add_ok": True,
+        "image": True,
     }
 
     text_5 = ";okabc ;"
@@ -48,6 +55,7 @@ def test_get_text():
         "text": "abc ",
         "delete": True,
         "add_ok": True,
+        "image": True,
     }
 
     text_6 = ";ok abc;"
@@ -55,6 +63,7 @@ def test_get_text():
         "text": " abc",
         "delete": True,
         "add_ok": True,
+        "image": True,
     }
 
     text_7 = "cześć bocie"
@@ -63,6 +72,7 @@ def test_get_text():
         "text": "cześć bejbe",
         "delete": False,
         "add_ok": False,
+        "image": True,
     }
 
     text_8 = ";ok~abc;"
@@ -70,6 +80,7 @@ def test_get_text():
         "text": "abc",
         "delete": False,
         "add_ok": True,
+        "image": True,
     }
 
     text_9 = ";ok~~abc;"
@@ -77,6 +88,7 @@ def test_get_text():
         "text": "abc",
         "delete": True,
         "add_ok": False,
+        "image": True,
     }
 
     text_10 = ";ok~~~abc;"
@@ -84,6 +96,7 @@ def test_get_text():
         "text": "abc",
         "delete": False,
         "add_ok": False,
+        "image": True,
     }
 
     text_11 = "bocie"
@@ -91,4 +104,21 @@ def test_get_text():
         "text": "author",
         "delete": False,
         "add_ok": False,
+        "image": True,
     }
+
+    text_12 = ":deprecatedDelevoCry:"
+    response = get_text(text_12)
+    assert response["text"] is not None
+    assert response["delete"] is False
+    assert response["add_ok"] is False
+    assert response["image"] is False
+    assert re.search(r"WARNING: Deprecated emoji call",
+                     response["text"]) is not None
+
+    text_13 = ":DeprecatedDelevoCry:"
+    response = get_text(text_13)
+    assert response["text"] is None
+    assert response["delete"] is False
+    assert response["add_ok"] is False
+    assert response["image"] is False
