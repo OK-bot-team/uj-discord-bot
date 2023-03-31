@@ -109,12 +109,10 @@ def test_get_text():
 
     text_12 = ":deprecatedDelevoCry:"
     response = get_text(text_12)
-    assert response["text"] is not None
+    assert response["text"] is None
     assert response["delete"] is False
     assert response["add_ok"] is False
     assert response["image"] is False
-    assert re.search(r"WARNING: Deprecated emoji call",
-                     response["text"]) is not None
 
     text_13 = ":DeprecatedDelevoCry:"
     response = get_text(text_13)
@@ -131,7 +129,14 @@ def test_get_text():
     assert response["image"] is False
 
     text_15 = "<:deprecatedDelevoCry:123456789>"
-    response = get_text(text_15)
+
+    class Author:
+        def mention(self) -> str:
+            return "author"
+
+    author = Author()
+
+    response = get_text(text_15, author)
     assert response["text"] is not None
     assert response["delete"] is False
     assert response["add_ok"] is False

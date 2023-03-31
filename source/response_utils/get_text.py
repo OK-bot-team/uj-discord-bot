@@ -3,7 +3,7 @@ from typing import Optional, Dict
 from datetime import datetime
 
 
-def get_text(message: str, author, nickname: str = None) -> Optional[Dict[str, bool]]:
+def get_text(message: str, author=None) -> Optional[Dict[str, bool]]:
     response = {"text": None, "delete": False,
                 "add_ok": False, "image": False}
 
