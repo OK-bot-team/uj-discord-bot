@@ -1,3 +1,4 @@
+from random import randint
 import re
 from typing import Optional, Dict
 from datetime import datetime
@@ -23,7 +24,7 @@ def get_text(message: str, author=None) -> Optional[Dict[str, bool]]:
 
     regx = re.search(r"([\s\S]*)bocie", message, re.IGNORECASE)
     if regx is not None:
-        response["text"] = f"{regx.group(1)}{author}"
+        response["text"] = f"{regx.group(1)}{author.display_name}"
         response["image"] = True
         return response
 
@@ -37,9 +38,16 @@ def get_text(message: str, author=None) -> Optional[Dict[str, bool]]:
 
     regx = re.search(r"<:deprecatedDelevoCry:[0-9]*>", message)
     if regx is not None:
-        response["text"] = ""
         response["text"] = f"----------\n[{datetime.today().strftime('%Y-%m-%d %H:%M:%S')}] WARNING: Deprecated emoji call.\n <:deprecatedDelevoCry:917741279012610078> is deprecated.\n{author.mention} please use the new <:baniaCry:1067860950700531842> cry emoji instead.\n----------"
-        response["mention"] = True
         return response
 
-    return response
+    regx = re.search(r"\?$", message, re.IGNORECASE)
+    if regx is not None and randint(1, 400) >= 399:
+        response["text"] = f"{author.mention} jako, że jesteś nowy to tym razem skończy się tylko na warnie ale w przyszłości UŻYJ OPCJI SZUKAJ, było wałkowane milion razy. Pozdrawiam, moderator forum."
+        return response
+
+    if randint(1, 4000) >= 3999:
+        response["text"] = message + f" {author.display_name}"
+        return response
+
+    return None

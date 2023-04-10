@@ -6,7 +6,6 @@ from discord.ext.commands import CommandNotFound
 from discord.ext.commands import cooldown, BucketType, CommandOnCooldown
 
 from dotenv import load_dotenv
-from random import randint
 
 from .commands.check_baca import check_baca
 from .commands.remindme import remindme_util
@@ -97,15 +96,11 @@ class Bot(BotBase):
             if len(message.content) == 0 or message.content[0] == self.PREFIX:
                 return
 
-            nickname = message.author.display_name
             response = get_text(message.content, message.author)
-
-            if response["text"] is not None:
+            if response is not None:
                 await send_response(response, message, message.author)
                 if response["delete"] is True:
                     await message.delete()
-            elif randint(1, 4000) >= 3999:
-                await send_response(nickname, message, message.author, True)
 
 
 bot = Bot()
