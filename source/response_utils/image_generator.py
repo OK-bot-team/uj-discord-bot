@@ -30,7 +30,7 @@ def contains_polish_letters(text: str) -> str:
     return re.search(r"[żółćęśąźń]", text) is not None
 
 
-def create_image(response: dict[str, bool, bool], author: str) -> Image:
+def create_image(response: dict[str, bool], author) -> Image:
     text = response["text"]
     fontsize = 40 if len(text) > 100 else 80
 

@@ -3,143 +3,142 @@ import re
 
 
 def test_get_text():
+    class Author:
+        def __init__(self, name="author"):
+            self.display_name = name
+
+        def mention(self) -> str:
+            return self.display_name
+
     text_none = ""
-    assert get_text(text_none) == {
-        "text": None,
-        "delete": False,
-        "add_ok": False,
-        "image": False,
-    }
+    assert get_text(text_none) is None
 
     text_wrong = "abc"
-    assert get_text(text_wrong) == {
-        "text": None,
-        "delete": False,
-        "add_ok": False,
-        "image": False,
-    }
+    assert get_text(text_wrong) is None
 
-    text_1 = ";okabc;"
-    assert get_text(text_1) == {
+    text_lowercasePrintCommand = ";okabc;"
+    assert get_text(text_lowercasePrintCommand) == {
         "text": "abc",
         "delete": True,
         "add_ok": True,
         "image": True,
     }
-    text_2 = ";Okabc;"
-    assert get_text(text_2) == {
-        "text": "abc",
-        "delete": True,
-        "add_ok": True,
-        "image": True,
-    }
-
-    text_3 = ";oKabc;"
-    assert get_text(text_3) == {
+    text_capitalizedPrintCommand = ";Okabc;"
+    assert get_text(text_capitalizedPrintCommand) == {
         "text": "abc",
         "delete": True,
         "add_ok": True,
         "image": True,
     }
 
-    text_4 = ";OKabc;"
-    assert get_text(text_4) == {
+    text_pokemonStylePrintCommand = ";oKabc;"
+    assert get_text(text_pokemonStylePrintCommand) == {
         "text": "abc",
         "delete": True,
         "add_ok": True,
         "image": True,
     }
 
-    text_5 = ";okabc ;"
-    assert get_text(text_5) == {
+    text_uppercaseOKPrintCommand = ";OKabc;"
+    assert get_text(text_uppercaseOKPrintCommand) == {
+        "text": "abc",
+        "delete": True,
+        "add_ok": True,
+        "image": True,
+    }
+
+    text_whitespaceOnEndOfPrintCommand = ";okabc ;"
+    assert get_text(text_whitespaceOnEndOfPrintCommand) == {
         "text": "abc ",
         "delete": True,
         "add_ok": True,
         "image": True,
     }
 
-    text_6 = ";ok abc;"
-    assert get_text(text_6) == {
+    text_whitespaceInPrintCommand = ";ok abc;"
+    assert get_text(text_whitespaceInPrintCommand) == {
         "text": " abc",
         "delete": True,
         "add_ok": True,
         "image": True,
     }
 
-    text_7 = "cześć bocie"
-    author = "bejbe"
-    assert get_text(text_7, author) == {
+    text_bocieCommand = "cześć bocie"
+    author = Author("bejbe")
+    assert get_text(text_bocieCommand, author) == {
         "text": "cześć bejbe",
         "delete": False,
         "add_ok": False,
         "image": True,
     }
 
-    text_8 = ";ok~abc;"
-    assert get_text(text_8) == {
+    text_singleTildePrintCommand = ";ok~abc;"
+    assert get_text(text_singleTildePrintCommand) == {
         "text": "abc",
         "delete": False,
         "add_ok": True,
         "image": True,
     }
 
-    text_9 = ";ok~~abc;"
-    assert get_text(text_9) == {
+    text_doubleTildePrintCommand = ";ok~~abc;"
+    assert get_text(text_doubleTildePrintCommand) == {
         "text": "abc",
         "delete": True,
         "add_ok": False,
         "image": True,
     }
 
-    text_10 = ";ok~~~abc;"
-    assert get_text(text_10) == {
+    text_tripleTildePrintCommand = ";ok~~~abc;"
+    assert get_text(text_tripleTildePrintCommand) == {
         "text": "abc",
         "delete": False,
         "add_ok": False,
         "image": True,
     }
 
-    text_11 = "bocie"
-    assert get_text(text_11, "author") == {
+    author = Author()
+
+    text_standaloneBocieCommand = "bocie"
+    assert get_text(text_standaloneBocieCommand, author) == {
         "text": "author",
         "delete": False,
         "add_ok": False,
         "image": True,
     }
 
-    text_12 = ":deprecatedDelevoCry:"
-    response = get_text(text_12)
-    assert response["text"] is None
-    assert response["delete"] is False
-    assert response["add_ok"] is False
-    assert response["image"] is False
+    text_lowercaseWrongDeprecated = ":deprecatedDelevoCry:"
+    response = get_text(text_lowercaseWrongDeprecated)
+    assert response is None
 
-    text_13 = ":DeprecatedDelevoCry:"
-    response = get_text(text_13)
-    assert response["text"] is None
-    assert response["delete"] is False
-    assert response["add_ok"] is False
-    assert response["image"] is False
+    text_uppercaseWrongDeprecated = ":DeprecatedDelevoCry:"
+    response = get_text(text_uppercaseWrongDeprecated)
+    assert response is None
 
-    text_14 = "deprecatedDelevoCry"
-    response = get_text(text_14)
-    assert response["text"] is None
-    assert response["delete"] is False
-    assert response["add_ok"] is False
-    assert response["image"] is False
+    text_noColonsWrongDeprecated = "deprecatedDelevoCry"
+    response = get_text(text_noColonsWrongDeprecated)
+    assert response is None
 
-    text_15 = "<:deprecatedDelevoCry:123456789>"
-
-    class Author:
-        def mention(self) -> str:
-            return "author"
-
+    text_correctDeprecated = "<:deprecatedDelevoCry:123456789>"
     author = Author()
-
-    response = get_text(text_15, author)
+    response = get_text(text_correctDeprecated, author)
     assert response["text"] is not None
     assert response["delete"] is False
     assert response["add_ok"] is False
     assert response["image"] is False
     assert re.search(r"WARNING: Deprecated emoji call",
                      response["text"]) is not None
+
+    test_correctElektroda = "pytanie?"
+    author = Author()
+    response = get_text(test_correctElektroda, author)
+    assert response is None or \
+        response["delete"] is False and \
+        response["add_ok"] is False and \
+        response["image"] is False and \
+        re.search(
+            r"jako, że jesteś nowy to tym razem skończy się tylko na warnie ale w przyszłości UŻYJ OPCJI SZUKAJ, było wałkowane milion razy\. Pozdrawiam, moderator forum\.", response["text"]) is not None
+
+    test_incorrectElektroda = "pytanie? "
+    author = Author()
+    response = get_text(test_incorrectElektroda, author)
+    assert response is None
