@@ -1,4 +1,5 @@
 from source.response_utils.get_text import get_text
+from source.response_utils.random import setNextInt
 import re
 
 
@@ -11,10 +12,22 @@ def test_get_text():
             return self.display_name
 
     text_none = ""
+    setNextInt(0)
     assert get_text(text_none) is None
 
     text_wrong = "abc"
+    setNextInt(0)
     assert get_text(text_wrong) is None
+
+    text_randomMessage = "abc"
+    author = Author()
+    setNextInt(4000)
+    assert get_text(text_randomMessage, author) == {
+        "text": "abc author",
+        "delete": False,
+        "add_ok": False,
+        "image": True,
+    }
 
     text_lowercasePrintCommand = ";okabc;"
     assert get_text(text_lowercasePrintCommand) == {
@@ -128,15 +141,21 @@ def test_get_text():
     assert re.search(r"WARNING: Deprecated emoji call",
                      response["text"]) is not None
 
-    test_correctElektroda = "pytanie?"
+    test_correctElektrodaHit = "pytanie?"
+    setNextInt(400)
     author = Author()
-    response = get_text(test_correctElektroda, author)
-    assert response is None or \
-        response["delete"] is False and \
-        response["add_ok"] is False and \
-        response["image"] is False and \
-        re.search(
-            r"jako, że jesteś nowy to tym razem skończy się tylko na warnie ale w przyszłości UŻYJ OPCJI SZUKAJ, było wałkowane milion razy\. Pozdrawiam, moderator forum\.", response["text"]) is not None
+    response = get_text(test_correctElektrodaHit, author)
+    assert response["delete"] is False
+    assert response["add_ok"] is False
+    assert response["image"] is False
+    assert re.search(
+        r"jako, że jesteś nowy to tym razem skończy się tylko na warnie ale w przyszłości UŻYJ OPCJI SZUKAJ, było wałkowane milion razy\. Pozdrawiam, moderator forum\.", response["text"]) is not None
+
+    test_correctElektrodaMiss = "pytanie?"
+    setNextInt(0)
+    author = Author()
+    response = get_text(test_correctElektrodaMiss, author)
+    assert response is None
 
     test_incorrectElektroda = "pytanie? "
     author = Author()

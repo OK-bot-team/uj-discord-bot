@@ -1,4 +1,4 @@
-from random import randint
+from .random import randint
 import re
 from typing import Optional, Dict
 from datetime import datetime
@@ -48,6 +48,7 @@ def get_text(message: str, author=None) -> Optional[Dict[str, bool]]:
 
     if randint(1, 4000) >= 3999:
         response["text"] = message + f" {author.display_name}"
+        response["image"] = True
         return response
 
     return None
