@@ -138,8 +138,10 @@ def test_get_text():
     assert response["delete"] is False
     assert response["add_ok"] is False
     assert response["image"] is False
-    assert re.search(r"WARNING: Deprecated emoji call",
-                     response["text"]) is not None
+    assert (
+        re.search(r"WARNING: Deprecated emoji call", response["text"])
+        is not None
+    )
 
     test_correctElektrodaHit = "pytanie?"
     setNextInt(400)
@@ -148,8 +150,13 @@ def test_get_text():
     assert response["delete"] is False
     assert response["add_ok"] is False
     assert response["image"] is False
-    assert re.search(
-        r"jako, że jesteś nowy to tym razem skończy się tylko na warnie ale w przyszłości UŻYJ OPCJI SZUKAJ, było wałkowane milion razy\. Pozdrawiam, moderator forum\.", response["text"]) is not None
+    assert (
+        re.search(
+            r"jako, że jesteś nowy to tym razem skończy się tylko na warnie ale w przyszłości UŻYJ OPCJI SZUKAJ, było wałkowane milion razy\. Pozdrawiam, moderator forum\.",
+            response["text"],
+        )
+        is not None
+    )
 
     test_correctElektrodaMiss = "pytanie?"
     setNextInt(0)

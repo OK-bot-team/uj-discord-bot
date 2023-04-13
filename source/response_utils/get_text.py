@@ -5,8 +5,7 @@ from datetime import datetime
 
 
 def get_text(message: str, author=None) -> Optional[Dict[str, bool]]:
-    response = {"text": None, "delete": False,
-                "add_ok": False, "image": False}
+    response = {"text": None, "delete": False, "add_ok": False, "image": False}
 
     regx = re.search(r"(?<=;ok)(~*)([\s\S]*)(?=;)", message, re.IGNORECASE)
     if regx is not None:
@@ -38,12 +37,16 @@ def get_text(message: str, author=None) -> Optional[Dict[str, bool]]:
 
     regx = re.search(r"<:deprecatedDelevoCry:[0-9]*>", message)
     if regx is not None:
-        response["text"] = f"----------\n[{datetime.today().strftime('%Y-%m-%d %H:%M:%S')}] WARNING: Deprecated emoji call.\n <:deprecatedDelevoCry:917741279012610078> is deprecated.\n{author.mention} please use the new <:baniaCry:1067860950700531842> cry emoji instead.\n----------"
+        response[
+            "text"
+        ] = f"----------\n[{datetime.today().strftime('%Y-%m-%d %H:%M:%S')}] WARNING: Deprecated emoji call.\n <:deprecatedDelevoCry:917741279012610078> is deprecated.\n{author.mention} please use the new <:baniaCry:1067860950700531842> cry emoji instead.\n----------"
         return response
 
     regx = re.search(r"\?$", message, re.IGNORECASE)
     if regx is not None and randint(1, 400) >= 399:
-        response["text"] = f"{author.mention} jako, że jesteś nowy to tym razem skończy się tylko na warnie ale w przyszłości UŻYJ OPCJI SZUKAJ, było wałkowane milion razy. Pozdrawiam, moderator forum."
+        response[
+            "text"
+        ] = f"{author.mention} jako, że jesteś nowy to tym razem skończy się tylko na warnie ale w przyszłości UŻYJ OPCJI SZUKAJ, było wałkowane milion razy. Pozdrawiam, moderator forum."
         return response
 
     if randint(1, 4000) >= 3999:
