@@ -1,4 +1,5 @@
-import asyncio
+import time
+import sqlite3
 
 
 async def remindme_util(ctx, amount, unit):
@@ -11,11 +12,19 @@ async def remindme_util(ctx, amount, unit):
     try:
         amount = int(amount)
         if amount > 0:
-            amount = amount * time_offsets[unit]
+            date = time.time() + amount * time_offsets[unit]
+
+            with sqlite3.connect('data/okbot.db') as database:
+                _ = database.cursor().execute("""
+                    INSERT INTO Reminders
+                        (userID, channelID, messageID, date)
+                    VALUES
+                        (?, ?, ?, ?)
+                """, (ctx.author.id, ctx.channel.id, ctx.message.id, date))
+
             await ctx.send("Started reminder")
-            await asyncio.sleep(amount)
-            await ctx.reply(f"It's time bro {ctx.author.mention}!")
-            await ctx.author.send("Its time bro!")
+
+            ctx.bot.newReminder.set()
     except ValueError:
         await ctx.send("Time must be an integer")
         return

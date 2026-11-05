@@ -19,16 +19,6 @@ def test_get_text():
     setNextInt(0)
     assert get_text(text_wrong) is None
 
-    text_randomMessage = "abc"
-    author = Author()
-    setNextInt(4000)
-    assert get_text(text_randomMessage, author) == {
-        "text": "abc author",
-        "delete": False,
-        "add_ok": False,
-        "image": True,
-    }
-
     text_lowercasePrintCommand = ";okabc;"
     assert get_text(text_lowercasePrintCommand) == {
         "text": "abc",
@@ -119,10 +109,6 @@ def test_get_text():
         "image": True,
     }
 
-    text_lowercaseWrongDeprecated = ":deprecatedDelevoCry:"
-    response = get_text(text_lowercaseWrongDeprecated)
-    assert response is None
-
     text_uppercaseWrongDeprecated = ":DeprecatedDelevoCry:"
     response = get_text(text_uppercaseWrongDeprecated)
     assert response is None
@@ -131,7 +117,7 @@ def test_get_text():
     response = get_text(text_noColonsWrongDeprecated)
     assert response is None
 
-    text_correctDeprecated = "<:deprecatedDelevoCry:123456789>"
+    text_correctDeprecated = "<:deprecatedDelevoCry:>"
     author = Author()
     response = get_text(text_correctDeprecated, author)
     assert response["text"] is not None

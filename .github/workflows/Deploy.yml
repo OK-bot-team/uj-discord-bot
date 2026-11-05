@@ -1,4 +1,4 @@
-name: Deploy bot
+name: Deploy
 
 on:
   push:
@@ -16,6 +16,5 @@ jobs:
         key: ${{ secrets.KEY }}
         username: ${{ secrets.USERNAME }}
         port: ${{ secrets.PORT }}
-        passphrase: ${{ secrets.PASSPHRASE }}
-        script_stop: true
-        script: ./bot-deploy.sh
+        # passphrase: ${{ secrets.PASSPHRASE }}
+        script: ./scripts/okbot.sh

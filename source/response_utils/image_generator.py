@@ -20,7 +20,9 @@ TEXT_SIZE_LIMIT = 3000
 
 
 def get_text_dimensions(text: str, font):
-    width, height = DRAW_TEXT_MEASURE.textsize(text, font)
+    bbox = DRAW_TEXT_MEASURE.textbbox((0, 0), text, font=font)
+    width, height = bbox[2] - bbox[0], bbox[3] - bbox[1]
+
     width = TEXT_SIZE_LIMIT if width > TEXT_SIZE_LIMIT else width
     height = TEXT_SIZE_LIMIT if height > TEXT_SIZE_LIMIT else height
     return width, height

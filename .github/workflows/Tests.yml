@@ -13,19 +13,17 @@ jobs:
     strategy:
       fail-fast: false
       matrix:
-        python-version: [3.8]
+        python-version: [3.13]
 
     steps:
-    - uses: actions/checkout@v3
-    - name: Set up Python ${{ matrix.python-version }}
-      uses: actions/setup-python@v4.1.0
+    - uses: actions/checkout@v5
+    - name: Set up uv
+      uses: astral-sh/setup-uv@v7
       with:
-        python-version: ${{ matrix.python-version }}
-    - name: Install dependencies
+        enable-cache: true
+    - name: Set up Python ${{ matrix.python-version }}
       run: |
-        pip install -U git+https://github.com/Pycord-Development/pycord
-        python -m pip install --upgrade pip
-        if [ -f requirements.txt ]; then pip install -r requirements.txt; fi
+        uv python install ${{ matrix.python-version }}
     - name: Test with pytest
       run: |
-        pytest
+        uv run pytest
