@@ -17,4 +17,4 @@ jobs:
         username: ${{ secrets.USERNAME }}
         port: ${{ secrets.PORT }}
         # passphrase: ${{ secrets.PASSPHRASE }}
-        script: ./bot-deploy.sh
+        script: ./scripts/okbot.sh
