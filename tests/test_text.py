@@ -19,16 +19,6 @@ def test_get_text():
     setNextInt(0)
     assert get_text(text_wrong) is None
 
-    text_randomMessage = "abc"
-    author = Author()
-    setNextInt(4000)
-    assert get_text(text_randomMessage, author) == {
-        "text": "abc author",
-        "delete": False,
-        "add_ok": False,
-        "image": True,
-    }
-
     text_lowercasePrintCommand = ";okabc;"
     assert get_text(text_lowercasePrintCommand) == {
         "text": "abc",

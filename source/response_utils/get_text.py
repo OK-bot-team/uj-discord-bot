@@ -55,9 +55,4 @@ def get_text(message: str, author=None) -> dict[str, bool] | None:
             ] = f"{author.mention} jako, że jesteś nowy to tym razem skończy się tylko na warnie ale w przyszłości UŻYJ OPCJI SZUKAJ, było wałkowane milion razy. Pozdrawiam, moderator forum."
             return response
 
-    if randint(1, 4000) >= 3999:
-        response["text"] = message + f" {author.display_name}"
-        response["image"] = True
-        return response
-
     return None
